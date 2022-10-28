@@ -1,9 +1,9 @@
 /* ###################################################################### */
 //const HOST = '192.168.43.6';
 const HOST = '10.1.0.4';
-const PORT = 80;
+const PORT = 443;
 
-let http = require('http');
+let https = require('https');
 let url = require('url');
 let fs = require('fs');
 
@@ -11,14 +11,15 @@ let userid_arr = [];
 let username_arr = [];
 let temp_arr = [];
 let temp_arr2 = [];
-var options={
-    ca: fs.readFileSync('./public/etc/ssl/ca_bundle.crt'),
-    cert: fs.readFileSync('./public/etc/ssl/certificate.crt'),
-    key: ('./public/etc/private/private.key')
 
+let option = {
+    ca: fs.readFileSync(__dirname + '/public/etc/ssl/ca_bundle.crt'),
+    cert: fs.readFileSync(__dirname + '/public/etc/ssl/certificate.crt'),
+    key: fs.readFileSync(__dirname + '/public/etc/private/private.key')
 };
+
 /* ###################################################################### */
-let server = http.createServer(options ,(request, response) => {
+let server = https.createServer(option, (request, response) => {
     console.log('connection');
     let path = url.parse(request.url).pathname;
     switch (path) {
@@ -29,7 +30,6 @@ let server = http.createServer(options ,(request, response) => {
             response.end();
             break;
         case '/index.html':
-        case '/.well-known/pki-validation/383E840F74D391D7C9BF9513FCC5EAB8.txt':
         case '/js/main.js':
             fs.readFile(__dirname + '/public' + path, (error, data) => {
                 if (error) {
@@ -66,6 +66,7 @@ server.listen(PORT, HOST);
 let server_io = require('socket.io')(server);
 
 server_io.on('connection', (socket) => {
+    socket.emit('option', option);
     /* when somebody disconnect */
     socket.on('disconnect', () => {
         /* let all user give their id again for refresh user-id-list */
