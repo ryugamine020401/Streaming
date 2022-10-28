@@ -300,16 +300,12 @@ function Init() {
     });
 
     /* ---------------------------------------- */
-    /* peer init when client open the page, will receive a peer-id */
-    myPeer.on('open', (id) => {
-        myid = id;
-        socket.emit('new-user-request', myid, myname);
-    });
-
     /* server give all user id: refresh user-id-list */
     socket.on('all-user-id', (id_arr, name_arr) => {
         userid_arr = id_arr;
         username_arr = name_arr;
+        console.log(username_arr);
+        console.log(userid_arr.length)
         document.getElementById("number-of-people").innerText = `線上人數 : ${userid_arr.length}`;
     });
 
@@ -322,20 +318,26 @@ function Init() {
             if (myAudioStream) myPeer.call(userid, myAudioStream);
             if (myScreenStream) myPeer.call(userid, myScreenStream);
         }
-        /*username = (userid == myid)? '您': username;
+        username = (userid == myid)? '您': username;
         document.getElementById("chatroom").innerHTML += `<div>
             <span>* ${username} 已加入 *</span>
-        </div>`;*/
+        </div>`;
     });
 
     /* show the username on chatroom when somebody left the room */
     socket.on('someone-left', (username) => {
-        /*document.getElementById("chatroom").innerHTML += `<div>
+        document.getElementById("chatroom").innerHTML += `<div>
             <span>* ${username} 已離開 *</span>
-        </div>`;*/
+        </div>`;
     });
 
     /* ---------------------------------------- */
+    /* peer init when client open the page, will receive a peer-id */
+    myPeer.on('open', (id) => {
+        myid = id;
+        socket.emit('new-user-request', myid, myname);
+    });
+
 }
 
 /* ###################################################################### */
