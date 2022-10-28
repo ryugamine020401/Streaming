@@ -1,7 +1,7 @@
 /* ###################################################################### */
 //const HOST = '192.168.43.6';
-const HOST = '127.0.0.1';
-const PORT = 3001;
+const HOST = '10.1.0.4';
+const PORT = 80;
 
 let http = require('http');
 let url = require('url');
