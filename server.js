@@ -11,9 +11,14 @@ let userid_arr = [];
 let username_arr = [];
 let temp_arr = [];
 let temp_arr2 = [];
+var options={
+    ca: fs.readFileSync('./public/etc/ssl/ca_bundle.crt'),
+    cert: fs.readFileSync('./public/etc/ssl/certificate.crt'),
+    key: ('./public/etc/private/private.key')
 
+};
 /* ###################################################################### */
-let server = http.createServer((request, response) => {
+let server = http.createServer(options ,(request, response) => {
     console.log('connection');
     let path = url.parse(request.url).pathname;
     switch (path) {
